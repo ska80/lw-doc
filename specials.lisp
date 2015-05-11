@@ -33,10 +33,10 @@
   (make-pathname :name nil
                  :type nil
                  :version nil
-                 :defaults 
-                 #+:lispworks6.1
+                 :defaults
+                 #+(or lispworks7.0 lispworks6.1)
                  (sys:lispworks-dir "manual/online/")
-                 #-:lispworks6.1
+                 #-(or lispworks7.0 lispworks6.1)
                  (sys:lispworks-dir "manual/online/web/"))
   "A pathname denoting the directory where the browsable
 documentation can be found.")
@@ -58,20 +58,26 @@ following the last hyphen in its name of those files in
                                                    -1000000))))))
              (regex-replace-all "\\\\" (enough-namestring path *docs-base-path*) "/"))))
     `(#+win32
-      ("COM" ,(find-highest-numbered-html-file "COM/html/com-*.htm")) 
-      ("ED" #+:win32 ,(find-highest-numbered-html-file "EDUG-W/html/eduser-w-*.htm")
-            #+:linux ,(find-highest-numbered-html-file "EDUG-U/html/eduser-u-*.htm")
-            #+:freebsd ,(find-highest-numbered-html-file "EDUG-U/html/eduser-u-*.htm")
-            #+:mac ,(find-highest-numbered-html-file "EDUG-M/html/eduser-m-*.htm"))
+      ("COM" ,(find-highest-numbered-html-file "COM/html/com-*.htm"))
+      ("ED" #+win32 ,(find-highest-numbered-html-file "EDUG-W/html/eduser-w-*.htm")
+            #+linux ,(find-highest-numbered-html-file "EDUG-U/html/eduser-u-*.htm")
+            #+freebsd ,(find-highest-numbered-html-file "EDUG-U/html/eduser-u-*.htm")
+            #+darwin ,(find-highest-numbered-html-file "EDUG-M/html/eduser-m-*.htm"))
       ("DLV" ,(or (find-highest-numbered-html-file "DV/html/delivery-*.htm")
 		  (find-highest-numbered-html-file "DV/html/deluser-*.htm")))
       ("FLI" ,(find-highest-numbered-html-file "FLI/html/fli-*.htm"))
       ("LW" ,(or (find-highest-numbered-html-file "LW/html/lw-*.htm")
 		 (find-highest-numbered-html-file "LWRM/html/lwref-*.htm")))
-      ("CAPI" ,(find-highest-numbered-html-file "CAPRM/html/capiref-*.htm"))))
+      #+lispworks7.0
+      ("CAPI" #+darwin ,(find-highest-numbered-html-file "CAPI-M/html/capi-m-*.htm"))
+      #-lispworks7.0
+      ("CAPI" ,(find-highest-numbered-html-file "CAPRM/html/capiref-*.htm"))
+      #+darwin
+      ("OBJC" ,(find-highest-numbered-html-file "OBJC/html/objc-*.htm"))
+      ("CORBA" ,(find-highest-numbered-html-file "CORBA/html/corba-*.htm"))
+      ("KW" #+darwin ,(find-highest-numbered-html-file "KW-M/html/kwprolog-m-*.htm"))))
   "An alist mapping shortcuts for LW documentation sections to
 the relative location of their index page.")
-   
 
 (defvar *link-table* (make-hash-table :test #'equal)
   "A hash table which maps symbols and editor commands to lists
@@ -94,11 +100,12 @@ they denote.")
 be bound to a prefix which will be added to each link.")
 
 (defvar *lw-link-prefix*
-  #+:lispworks4.4 "http://www.lispworks.com/documentation/lw445/"
-  #+:lispworks5.0 "http://www.lispworks.com/documentation/lw50/"
-  #+:lispworks5.1 "http://www.lispworks.com/documentation/lw51/"
-  #+:lispworks6.0 "http://www.lispworks.com/documentation/lw60/"
-  #+:lispworks6.1 "http://www.lispworks.com/documentation/lw61/"
+  #+lispworks4.4 "http://www.lispworks.com/documentation/lw445/"
+  #+lispworks5.0 "http://www.lispworks.com/documentation/lw50/"
+  #+lispworks5.1 "http://www.lispworks.com/documentation/lw51/"
+  #+lispworks6.0 "http://www.lispworks.com/documentation/lw60/"
+  #+lispworks6.1 "http://www.lispworks.com/documentation/lw61/"
+  #+lispworks7.0 "http://www.lispworks.com/documentation/lw70/"
   "The prefix for the LispWorks online documentation.")
 
 (defvar *html-stream* nil
