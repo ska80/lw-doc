@@ -69,13 +69,19 @@ following the last hyphen in its name of those files in
       ("LW" ,(or (find-highest-numbered-html-file "LW/html/lw-*.htm")
 		 (find-highest-numbered-html-file "LWRM/html/lwref-*.htm")))
       #+lispworks7.0
-      ("CAPI" #+darwin ,(find-highest-numbered-html-file "CAPI-M/html/capi-m-*.htm"))
+      ("CAPI" #+linux ,(find-highest-numbered-html-file "CAPI-U/html/capi-u-*.htm")
+              #+freebsd ,(find-highest-numbered-html-file "CAPI-U/html/capi-u-*.htm")
+              #+darwin ,(find-highest-numbered-html-file "CAPI-M/html/capi-m-*.htm"))
       #-lispworks7.0
       ("CAPI" ,(find-highest-numbered-html-file "CAPRM/html/capiref-*.htm"))
       #+darwin
       ("OBJC" ,(find-highest-numbered-html-file "OBJC/html/objc-*.htm"))
       ("CORBA" ,(find-highest-numbered-html-file "CORBA/html/corba-*.htm"))
-      ("KW" #+darwin ,(find-highest-numbered-html-file "KW-M/html/kwprolog-m-*.htm"))))
+      ("KW" #+linux ,(find-highest-numbered-html-file "KW-U/html/kwprolog-u-*.htm")
+            #+freebsd ,(find-highest-numbered-html-file "KW-U/html/kwprolog-u-*.htm")
+            #+darwin ,(find-highest-numbered-html-file "KW-M/html/kwprolog-m-*.htm"))
+      #+(or linux freebsd)
+      ("CLIM" ,(find-highest-numbered-html-file "CLIM/html/climuser-*.htm"))))
   "An alist mapping shortcuts for LW documentation sections to
 the relative location of their index page.")
 
